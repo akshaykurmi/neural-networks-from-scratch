@@ -7,14 +7,14 @@ from urllib.request import urlopen
 import numpy as np
 import matplotlib.pyplot as plt
 
-from nnfs.datasets import DATA_DIRECTORY
+from nnfs.datasets import DATA_DOWNLOAD_DIRECTORY
 
 
 class MNISTDigits:
     BASE_URL = "http://yann.lecun.com/exdb/mnist/"
     FILE_NAMES = {"train": ("train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz"),
                   "test": ("t10k-images-idx3-ubyte.gz", "t10k-labels-idx1-ubyte.gz")}
-    DATA_FILE = os.path.join(DATA_DIRECTORY, "mnist_digits.npz")
+    DATA_FILE = os.path.join(DATA_DOWNLOAD_DIRECTORY, "mnist_digits.npz")
 
     def load_data(self):
         if not os.path.isfile(self.DATA_FILE):
@@ -42,8 +42,8 @@ class MNISTDigits:
         if os.path.isfile(self.DATA_FILE):
             print(f"Data has already been downloaded.")
             return
-        if not os.path.exists(DATA_DIRECTORY):
-            os.mkdir(DATA_DIRECTORY)
+        if not os.path.exists(DATA_DOWNLOAD_DIRECTORY):
+            os.mkdir(DATA_DOWNLOAD_DIRECTORY)
         X_train, y_train = convert("train", 60000)
         X_test, y_test = convert("test", 10000)
         np.savez_compressed(self.DATA_FILE, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
