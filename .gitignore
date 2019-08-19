@@ -1,4 +1,6 @@
 .DS_Store
-__pycache__
 .idea
 .ipynb_checkpoints
+
+__pycache__
+data
