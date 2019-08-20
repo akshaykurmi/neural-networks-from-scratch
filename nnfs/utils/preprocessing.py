@@ -19,3 +19,11 @@ class OneHotEncoder:
     def fit_transform(self, y):
         self.fit(y)
         return self.transform(y)
+
+
+def normalize(X_train, X_test):
+    mean = X_train.mean()
+    standard_deviation = X_train.std()
+    X_train_normalized = (X_train - mean) / standard_deviation
+    X_test_normalized = (X_test - mean) / standard_deviation
+    return X_train_normalized, X_test_normalized
