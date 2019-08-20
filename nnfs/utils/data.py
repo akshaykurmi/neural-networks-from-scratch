@@ -15,3 +15,13 @@ def split_data(X, y, ratio, shuffle=True):
     X_1, X_2 = X[:divider], X[divider:]
     y_1, y_2 = y[:divider], y[divider:]
     return X_1, y_1, X_2, y_2
+
+
+def generate_batches(batch_size, X, y=None):
+    num_batches = X.shape[0] // batch_size
+    if X.shape[0] % batch_size != 0:
+        num_batches += 1
+    for batch in range(num_batches):
+        start = batch * batch_size
+        end = start + batch_size
+        yield (X[start:end], y[start:end]) if y is not None else X[start:end]
