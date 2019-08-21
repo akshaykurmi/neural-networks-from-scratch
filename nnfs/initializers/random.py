@@ -9,3 +9,13 @@ class RandomUniform:
 
     def initialize(self, shape):
         return np.random.uniform(self.min_value, self.max_value, shape)
+
+
+class RandomNormal:
+    def __init__(self, mean=0.0, standard_deviation=0.05, seed=None):
+        self.mean = mean
+        self.standard_deviation = standard_deviation
+        np.random.seed(seed)
+
+    def initialize(self, shape):
+        return np.random.normal(self.mean, self.standard_deviation, shape)
