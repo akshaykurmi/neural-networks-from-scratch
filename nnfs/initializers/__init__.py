@@ -1,2 +1,2 @@
-from .zeros import Zeros
+from .constant import Zeros, Ones, Constant
 from .random_uniform import RandomUniform
