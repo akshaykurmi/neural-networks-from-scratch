@@ -22,4 +22,4 @@ class Layer(ABC):
 
     @property
     def parameters_and_gradients(self):
-        return {}
+        return []
