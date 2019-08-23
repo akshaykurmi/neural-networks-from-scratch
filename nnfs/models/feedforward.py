@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import numpy as np
 
-from ..utils.common import window
+from ..utils.common import window, EWM
 from ..utils.data import generate_batches
 
 
@@ -36,20 +36,21 @@ class FeedForwardNetwork:
             next_layer.connect_with(layer)
 
     def fit(self, X, y, batch_size, epochs):
-        bar_format = 'Epoch: {n_fmt}/{total_fmt} |{bar}| ETA: {remaining} |{rate_fmt}{postfix}'
-        with tqdm(total=epochs, unit="epoch", bar_format=bar_format) as progress_bar:
-            for epoch_num in range(epochs):
-                predictions = []
-                for X_batch, y_batch in generate_batches(batch_size, X, y):
+        bar_format = "{desc} | Batch {n_fmt}/{total_fmt} |{bar}| ETA: {remaining} |{rate_fmt}{postfix}"
+        for epoch_num in range(epochs):
+            batches = list(generate_batches(batch_size, X, y))
+            with tqdm(total=len(batches), unit="batch", bar_format=bar_format, desc=f"Epoch {epoch_num + 1}") as bar:
+                avg_loss = {str(self.loss): EWM(100)}
+                avg_metrics = {str(metric): EWM(100) for metric in self.metrics}
+                for i, (X_batch, y_batch) in enumerate(batches):
                     y_pred = self._forward_propagation(X_batch, training=True)
                     self._backward_propagation(y_pred, y_batch)
                     self.optimizer.update_parameters(self.layers)
-                    predictions.extend(y_pred)
-                predictions = np.array(predictions)
-                loss = {str(self.loss): self.loss.compute(predictions, y)}
-                metrics = {str(metric): metric.compute(predictions, y) for metric in self.metrics}
-                progress_bar.update(1)
-                progress_bar.set_postfix({**loss, **metrics})
+                    avg_loss[str(self.loss)].add_value(self.loss.compute(y_pred, y_batch))
+                    for m in self.metrics:
+                        avg_metrics[str(m)].add_value(m.compute(y_pred, y_batch))
+                    bar.update(1)
+                    bar.set_postfix({**avg_loss, **avg_metrics})
 
     def predict(self, X, batch_size):
         predictions = []
