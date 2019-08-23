@@ -1,5 +1,6 @@
-from tqdm import tqdm
 import numpy as np
+from tqdm import tqdm
+from terminaltables import AsciiTable
 
 from ..utils.common import window, EWM
 from ..utils.data import generate_batches
@@ -64,3 +65,11 @@ class FeedForwardNetwork:
         loss = self.loss.compute(y_pred, y)
         metrics = {str(metric): metric.compute(y_pred, y) for metric in self.metrics}
         return loss, metrics
+
+    def summary(self):
+        data = [("Layer", "Input Shape", "Output Shape", "# Params")]
+        for layer in self.layers:
+            data.append((layer.name, layer.input_shape, layer.output_shape, f"{layer.num_params:,}"))
+        print(AsciiTable(data).table)
+        print(f"Total params: {sum(l.num_params for l in self.layers):,}")
+
