@@ -31,3 +31,7 @@ class Layer(ABC):
     @property
     def parameters_and_gradients(self):
         return []
+
+    @property
+    def name(self):
+        return self.__class__.__name__
