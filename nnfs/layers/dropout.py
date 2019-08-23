@@ -8,10 +8,9 @@ class Dropout(Layer):
         self.drop_percent = np.clip(drop_percent, 0, 1)
         self.random_state = np.random.RandomState(random_state)
         self.most_recent_mask = None
-        self.output_shape = None
 
-    def connect_with(self, prev_layer):
-        self.output_shape = prev_layer.output_shape
+    def _initialize_parameters(self):
+        self.output_shape = self.input_shape
 
     def forward(self, propagated_input, training=False, *args, **kwargs):
         probability = 1 - self.drop_percent if training else 1.0

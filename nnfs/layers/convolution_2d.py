@@ -11,7 +11,6 @@ class Convolution2D(Layer):
         self.stride = stride
         self.padding = padding
         self.input_shape = input_shape
-        self.output_shape = None
         self.activation = activation
         self.bias_initializer = bias_initializer
         self.weights_initializer = weights_initializer
@@ -29,18 +28,9 @@ class Convolution2D(Layer):
         self.W = self.weights_initializer.initialize((self.num_filters, channels, filter_height, filter_width))
         self.b = self.bias_initializer.initialize((self.num_filters,))
 
-    def make_first_layer(self):
-        super().make_first_layer()
-        assert self.input_shape is not None
-        self._initialize_parameters()
-
-    def connect_with(self, prev_layer):
-        self.input_shape = prev_layer.output_shape
-        self._initialize_parameters()
-
     def forward(self, X, *args, **kwargs):
         _, _, output_height, output_width = self.output_shape
-        batch_size = X.shape[0]
+        batch_size = self.input_shape[0]
         X_cols = self._im2col(X)
         output = self.W.reshape((self.num_filters, -1)).dot(X_cols) + self.b.reshape(-1, 1)
         output = output.reshape(self.num_filters, output_height, output_width, batch_size)

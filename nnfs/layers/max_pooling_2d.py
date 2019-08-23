@@ -8,7 +8,6 @@ class MaxPooling2D(Layer):
         self.pool_size = pool_size
         self.stride = stride
         self.input_shape = input_shape
-        self.output_shape = None
         self.cache = {}
 
     def _initialize_parameters(self):
@@ -19,15 +18,6 @@ class MaxPooling2D(Layer):
         output_height = 1 + (height - pool_height) // self.stride
         output_width = 1 + (width - pool_width) // self.stride
         self.output_shape = (batch_size, channels, output_height, output_width)
-
-    def make_first_layer(self):
-        super().make_first_layer()
-        assert self.input_shape is not None
-        self._initialize_parameters()
-
-    def connect_with(self, prev_layer):
-        self.input_shape = prev_layer.output_shape
-        self._initialize_parameters()
 
     def forward(self, X, *args, **kwargs):
         batch_size, channels, height, width = self.input_shape

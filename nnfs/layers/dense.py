@@ -7,7 +7,6 @@ class Dense(Layer):
         super().__init__()
         self.units = units
         self.input_shape = input_shape
-        self.output_shape = None
         self.activation = activation
         self.bias_initializer = bias_initializer
         self.weights_initializer = weights_initializer
@@ -16,17 +15,8 @@ class Dense(Layer):
 
     def _initialize_parameters(self):
         self.output_shape = (self.input_shape[0], self.units)
-        self.W = self.weights_initializer.initialize((self.input_shape[0], self.units))
+        self.W = self.weights_initializer.initialize((self.input_shape[1], self.units))
         self.b = self.bias_initializer.initialize((self.units,))
-
-    def make_first_layer(self):
-        super().make_first_layer()
-        assert self.input_shape is not None
-        self._initialize_parameters()
-
-    def connect_with(self, prev_layer):
-        self.input_shape = (prev_layer.output_shape[-1],)
-        self._initialize_parameters()
 
     def forward(self, propagated_input, *args, **kwargs):
         self.most_recent_propagated_input = propagated_input
