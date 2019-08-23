@@ -6,7 +6,7 @@ class Constant:
         self.value = value
 
     def initialize(self, shape):
-        return np.full(shape, self.value)
+        return np.full(shape, self.value, dtype=np.float64)
 
 
 class Zeros(Constant):
