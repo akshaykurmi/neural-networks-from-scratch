@@ -11,25 +11,23 @@ class Dense(Layer):
         self.bias_initializer = bias_initializer
         self.weights_initializer = weights_initializer
         self.W, self.dW, self.b, self.db = None, None, None, None
-        self.most_recent_propagated_input = None
+        self.cache = {}
 
     def _initialize_parameters(self):
         self.output_shape = (self.input_shape[0], self.units)
         self.W = self.weights_initializer.initialize((self.input_shape[1], self.units))
         self.b = self.bias_initializer.initialize((self.units,))
 
-    def forward(self, propagated_input, *args, **kwargs):
-        self.most_recent_propagated_input = propagated_input
-        weighted_output = np.dot(propagated_input, self.W) + self.b
-        activation_output = self.activation.compute(weighted_output)
-        return activation_output
+    def forward(self, X, *args, **kwargs):
+        self.cache = {"X": X}
+        output = np.dot(X, self.W) + self.b
+        return self.activation.compute(output)
 
-    def backward(self, back_propagated_gradients):
-        activation_gradients = back_propagated_gradients * self.activation.gradients()
-        self.dW = np.dot(self.most_recent_propagated_input.T, activation_gradients)
-        self.db = np.mean(activation_gradients, axis=0)
-        if not self.is_first_layer:
-            return np.dot(activation_gradients, self.W.T)
+    def backward(self, gradients):
+        gradients = gradients * self.activation.gradients()
+        self.dW = np.dot(self.cache["X"].T, gradients)
+        self.db = np.mean(gradients, axis=0)
+        return np.dot(gradients, self.W.T)
 
     @property
     def parameters_and_gradients(self):
