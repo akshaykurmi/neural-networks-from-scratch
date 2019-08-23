@@ -21,3 +21,7 @@ class Dropout(Layer):
 
     def backward(self, gradients):
         return self.cache["mask"] * gradients
+
+    @property
+    def num_params(self):
+        return 0

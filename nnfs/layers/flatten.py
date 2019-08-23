@@ -16,3 +16,7 @@ class Flatten(Layer):
 
     def backward(self, gradients):
         return np.reshape(gradients, self.input_shape)
+
+    @property
+    def num_params(self):
+        return 0

@@ -32,3 +32,7 @@ class Dense(Layer):
     @property
     def parameters_and_gradients(self):
         return [(self.W, self.dW), (self.b, self.db)]
+
+    @property
+    def num_params(self):
+        return np.prod((*self.W.shape, *self.b.shape))

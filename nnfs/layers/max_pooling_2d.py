@@ -62,3 +62,7 @@ class MaxPooling2D(Layer):
         j = j0.reshape(-1, 1) + j1.reshape(1, -1)
         k = np.repeat(np.arange(channels), pool_height * pool_width).reshape(-1, 1)
         return i, j, k
+
+    @property
+    def num_params(self):
+        return 0
