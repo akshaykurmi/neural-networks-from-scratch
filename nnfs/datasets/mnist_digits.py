@@ -36,7 +36,7 @@ class MNISTDigits:
             label_file.read(8)
             for i in range(num_rows):
                 images.append([ord(image_file.read(1)) for _ in range(28 * 28)])
-                labels.append([ord(label_file.read(1))])
+                labels.append(ord(label_file.read(1)))
             return np.array(images, dtype=np.uint8), np.array(labels, dtype=np.uint8)
 
         if os.path.isfile(self.DATA_FILE):
