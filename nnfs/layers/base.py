@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class Layer(ABC):
-    def __init__(self):
+    def __init__(self, input_shape=None, *args, **kwargs):
         self.is_first_layer = False
-        self.input_shape = None
+        self.input_shape = (None, *input_shape) if input_shape else None
         self.output_shape = None
 
     def make_first_layer(self):

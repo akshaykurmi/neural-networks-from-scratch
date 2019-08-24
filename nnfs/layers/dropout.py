@@ -3,8 +3,8 @@ from .base import Layer
 
 
 class Dropout(Layer):
-    def __init__(self, drop_percent, random_state=0):
-        super().__init__()
+    def __init__(self, drop_percent, random_state=0, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.drop_percent = np.clip(drop_percent, 0, 1)
         self.random_state = np.random.RandomState(random_state)
         self.cache = {}

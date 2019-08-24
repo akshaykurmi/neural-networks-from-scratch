@@ -3,10 +3,9 @@ from .base import Layer
 
 
 class Dense(Layer):
-    def __init__(self, units, activation, weights_initializer, bias_initializer, input_shape=None):
-        super().__init__()
+    def __init__(self, units, activation, weights_initializer, bias_initializer, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.units = units
-        self.input_shape = input_shape
         self.activation = activation
         self.bias_initializer = bias_initializer
         self.weights_initializer = weights_initializer
@@ -14,7 +13,7 @@ class Dense(Layer):
         self.cache = {}
 
     def _initialize_parameters(self):
-        self.output_shape = (self.input_shape[0], self.units)
+        self.output_shape = (None, self.units)
         self.W = self.weights_initializer.initialize((self.input_shape[1], self.units))
         self.b = self.bias_initializer.initialize((self.units,))
 
